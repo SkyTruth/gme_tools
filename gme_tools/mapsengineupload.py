@@ -30,7 +30,7 @@ class Command(object):
     def log(self, clear=False, **kw):
         if clear:
             self.lastlog = {}
-        kw["time"] = datetime.datetime.now().strftime("%-Y-%m-%d %H:%M:%S")
+        kw["time"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         if "tags" in kw: kw['tags'] = ", ".join(kw["tags"])
         self.lastlog.update(kw)
         self.logfile.writerow(self.lastlog)
