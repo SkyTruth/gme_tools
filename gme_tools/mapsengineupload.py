@@ -71,7 +71,7 @@ class Command(object):
                 "description": self.kw.get("description", ""),
                 "files": [{"filename": os.path.split(file)[1]}],
                 "acquisitionTime": self.kw.get("time", datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")),
-                "sharedAccessList": self.kw.get("acl", "Map Editors"),
+                "draftAccessList": self.kw.get("acl", "Map Editors"),
                 "attribution": self.kw["attribution"],
                 "tags": "tags" in self.kw and self.kw["tags"].split(",") or [],
                 "processingType": "autoMask"
@@ -90,16 +90,17 @@ class Command(object):
                         info[key] = value
 
         self.log(clear=True, status="begin", **info)
-
+        
+        info['projectId'] = self.kw['projectid']
         response, content = self.request(
-            "https://www.googleapis.com/mapsengine/create_tt/rasters/upload?projectId=%s" % self.kw['projectid'], method="POST", body = info)
+            "https://www.googleapis.com/mapsengine/v1/rasters/upload", method="POST", body = info)
         self.image_id = str(content['id'])
 
         self.log(status="container", id=self.image_id)
 
         with open(file) as f:
             response, content = self.request(
-                "https://www.googleapis.com/upload/mapsengine/create_tt/rasters/%s/files?filename=%s" % (self.image_id, os.path.split(file)[1]),
+                "https://www.googleapis.com/upload/mapsengine/v1/rasters/%s/files?filename=%s" % (self.image_id, os.path.split(file)[1]),
                 method="POST",
                 as_json=False,
                 body = f.read())

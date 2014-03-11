@@ -20,7 +20,7 @@ setup(
     description = "Google Mapsengine GeoTIFF uploader script",
     keywords = "gme geotiff",
     install_requires = ["httplib2==0.8", "oauth2client==1.2"],
-    version = "0.0.1",
+    version = "0.0.2",
     author = "Egil Moeller",
     author_email = "egil@skytruth.org",
     license = "GPL",
