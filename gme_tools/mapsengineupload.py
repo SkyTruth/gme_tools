@@ -67,7 +67,7 @@ class Command(object):
 
     def upload (self, file):
         info = {
-                "name": os.path.splitext(os.path.split(file)[1])[0],
+                "name": self.kw.get('name',os.path.splitext(os.path.split(file)[1])[0]),
                 "description": self.kw.get("description", ""),
                 "files": [{"filename": os.path.split(file)[1]}],
                 "acquisitionTime": self.kw.get("time", datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")),
