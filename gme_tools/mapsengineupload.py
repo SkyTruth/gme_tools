@@ -38,12 +38,14 @@ class Command(object):
 
     def request(self, url, as_json=True, raise_errors=True, retries=3, **kw):
         while retries:
+            request_edit = kw.copy()
+            time.sleep(2)
             retries -= 1
-            kw['headers'] = dict(kw.get('headers', {}))
-            if 'body' in kw and as_json:
-                kw['body'] = json.dumps(kw['body'])
-                kw['headers']["Content-Type"] = "application/json"
-            response, content = self.http.request(url, **kw)
+            request_edit['headers'] = dict(request_edit.get('headers', {}))
+            if 'body' in request_edit and as_json:
+                request_edit['body'] = json.dumps(request_edit['body'])
+                request_edit['headers']["Content-Type"] = "application/json"
+            response, content = self.http.request(url, **request_edit)
             try:
                 content = json.loads(content)
             except:
@@ -51,10 +53,10 @@ class Command(object):
             response['status'] = int(response['status'])
             if response['status'] < 200 or response['status'] > 299:
                 if retries:
-                    self.log(status="retry")
+                    self.log(status="retry", msg=content['error']['errors'][0]['message'])
                     continue
                 elif raise_errors:
-                    raise RequestException(response, content, url, kw)
+                    raise RequestException(response, content, url, request_edit)
             return response, content
 
     def connect(self):
