@@ -1,0 +1,6 @@
+The oauth2client has a dependency that must be installed BEFORE pip installing
+the requirements.  Here's the order of operations:
+
+Install libffi (sudo apt-get install libffi)
+pip install pyopenssl
+pip install -r requirements.txt
